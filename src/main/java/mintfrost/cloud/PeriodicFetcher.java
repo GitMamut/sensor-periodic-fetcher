@@ -7,9 +7,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @Component
+@RestController
 public class PeriodicFetcher {
 
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
@@ -25,6 +28,7 @@ public class PeriodicFetcher {
         System.out.println("Starting: " + this.toString());
     }
 
+    @RequestMapping("/fetchSensor")
     @Scheduled(fixedRateString = "${fixedRate.milliseconds}")
     private void fetchSensor() {
         HttpHeaders headers = new HttpHeaders();
