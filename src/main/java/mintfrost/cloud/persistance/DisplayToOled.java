@@ -30,13 +30,13 @@ public class DisplayToOled implements Persister {
 
 
         HttpEntity<String> requestEntity1 = new HttpEntity<>("", headers);
-        final String targetUrl1 = "http://192.168.1.25/control?cmd=OLED,3,1,"+currentOutdoorResponse.getDate().replace("-","");
+        final String targetUrl1 = "http://espeasy/control?cmd=OLED,3,1,"+currentOutdoorResponse.getDate().replace("-","");
         System.out.println("RQ: " + targetUrl1);
         ResponseEntity<String> responseEntity1 = REST_TEMPLATE.exchange(targetUrl1, HttpMethod.GET, requestEntity1, String.class);
         System.out.println("RS: " + responseEntity1);
 
         HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
-        final String targetUrl = "http://192.168.1.25/control?cmd=OLED,4,1,Outside: "+currentOutdoorResponse.getValue().replace('.','/');
+        final String targetUrl = "http://espeasy/control?cmd=OLED,4,1,Outside: "+currentOutdoorResponse.getValue().replace('.','/');
         System.out.println("RQ: " + targetUrl);
         ResponseEntity<String> responseEntity = REST_TEMPLATE.exchange(targetUrl, HttpMethod.GET, requestEntity, String.class);
         System.out.println("RS: " + responseEntity);
