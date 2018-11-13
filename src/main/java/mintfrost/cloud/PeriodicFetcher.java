@@ -17,19 +17,17 @@ public class PeriodicFetcher {
 
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
-    //    private final String targetUrl = "http://localhost:8080/sensors/currentPressure";
-    //    private final String targetUrl = "http://hello-spring-docker:8080/sensors/currentPressure";
-    private final String targetUrl;
+    private final String sourceUrl;
     private final Persister persister;
 
-    public PeriodicFetcher(String targetUrl, Persister persister) {
-        this.targetUrl = targetUrl;
+    public PeriodicFetcher(String sourceUrl, Persister persister) {
+        this.sourceUrl = sourceUrl;
         this.persister = persister;
         System.out.println("Starting: " + this.toString());
     }
 
-    @RequestMapping("/fetchSensor")
-    @Scheduled(fixedRateString = "${fixedRate.milliseconds}")
+    @RequestMapping("/persist")
+    @Scheduled(fixedRateString = "${scheduler.fixedRate.milliseconds}")
     private void fetchSensor() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -37,8 +35,8 @@ public class PeriodicFetcher {
 
 
         HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
-        System.out.println("RQ: " + targetUrl);
-        ResponseEntity<String> responseEntity = REST_TEMPLATE.exchange(targetUrl, HttpMethod.GET, requestEntity, String.class);
+        System.out.println("RQ: " + sourceUrl);
+        ResponseEntity<String> responseEntity = REST_TEMPLATE.exchange(sourceUrl, HttpMethod.GET, requestEntity, String.class);
 
         persister.save(responseEntity);
     }
@@ -46,7 +44,7 @@ public class PeriodicFetcher {
     @Override
     public String toString() {
         return "PeriodicFetcher{" +
-                "targetUrl='" + targetUrl + '\'' +
+                "sourceUrl='" + sourceUrl + '\'' +
                 ", persister=" + persister +
                 '}';
     }
